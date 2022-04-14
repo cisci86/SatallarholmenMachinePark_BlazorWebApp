@@ -22,7 +22,7 @@ namespace Exercise17.FuncApi
         [FunctionName("Get")]
         public static async Task<IActionResult> Get(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "machines")] HttpRequest req,
-            [Table("machinepark", Connection = "AzureWebJobsStorage")] CloudTable table,
+            [Table("machinepark", Connection = "UseDevelopmentStorage")] CloudTable table,
             ILogger log)
         {
             log.LogInformation("Getting all items...");
@@ -37,7 +37,7 @@ namespace Exercise17.FuncApi
         [FunctionName("GetDetails")]
         public static async Task<IActionResult> Details(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route ="machines/{id}")] HttpRequest req,
-            [Table("individualmachines", Connection = "AzureWebJobsStorage")] CloudTable machine,
+            [Table("individualmachines", Connection = "UseDevelopmentStorage")] CloudTable machine,
             string id,
             ILogger log)
         {
@@ -54,7 +54,7 @@ namespace Exercise17.FuncApi
         [FunctionName("Create")]
         public static async Task<IActionResult> Create(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "machines")] HttpRequest req,
-            [Table("machinepark", Connection = "AzureWebJobsStorage")] IAsyncCollector<MachineEntity> machines,
+            [Table("machinepark", Connection = "UseDevelopmentStorage")] IAsyncCollector<MachineEntity> machines,
             ILogger log)
         {
             log.LogInformation("Creating new machine");
@@ -80,7 +80,7 @@ namespace Exercise17.FuncApi
         public static async Task<IActionResult> UpdateData(
              [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "machines/data/{id}")] HttpRequest req,
              [Table("machinepark", Connection = "AzureWebJobsStorage")] CloudTable machinePark,
-             [Table("individualmachines", Connection = "AzureWebJobsStorage")] CloudTable individual,
+             [Table("individualmachines", Connection = "UseDevelopmentStorage")] CloudTable individual,
              string id,
              ILogger log)
         {
@@ -114,7 +114,7 @@ namespace Exercise17.FuncApi
         [FunctionName("UpdateStatus")]
         public static async Task<IActionResult> UpdateStatus(
              [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "machines/status/{id}")] HttpRequest req,
-             [Table("machinepark", Connection = "AzureWebJobsStorage")] CloudTable machinePark,
+             [Table("machinepark", Connection = "UseDevelopmentStorage")] CloudTable machinePark,
              string id,
              ILogger log)
         {
@@ -137,8 +137,8 @@ namespace Exercise17.FuncApi
         public static async Task<IActionResult> Delete(
             [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "machines/{id}")] HttpRequest req,
             [Table("machinepark", "Machines", "{id}", Connection = "AzureWebJobsStorage")] MachineEntity machineTableToRemove,
-            [Table("machinepark", Connection = "AzureWebJobsStorage")] CloudTable machineTable,
-            [Queue("machinequeue", Connection = "AzureWebJobsStorage")] IAsyncCollector<MachineEntity> queueMachine,
+            [Table("machinepark", Connection = "UseDevelopmentStorage")] CloudTable machineTable,
+            [Queue("machinequeue", Connection = "UseDevelopmentStorage")] IAsyncCollector<MachineEntity> queueMachine,
             string id,
             ILogger log)
         {
@@ -157,7 +157,7 @@ namespace Exercise17.FuncApi
         [FunctionName("GetRemovedFromQueue")]
         public static async Task RemoveFromQueue(
             [QueueTrigger("machinequeue", Connection = "AzureWebJobsStorage")] MachineEntity machine,
-            [Blob("removed", Connection = "AzureWebJobsStorage")] CloudBlobContainer blobContainer,
+            [Blob("removed", Connection = "UseDevelopmentStorage")] CloudBlobContainer blobContainer,
             ILogger log)
         {
             log.LogInformation("Archiving has started");
