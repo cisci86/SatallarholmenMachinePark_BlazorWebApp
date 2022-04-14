@@ -1,0 +1,97 @@
+﻿@using Bogus
+@inject AppState state
+@inject NavigationManager nav
+
+    <div class="text-center">
+    <h2 class="d-md-inline-block rounded px-2">Machine park</h2>
+    </div>
+    <div class="row">
+        @foreach (var machine in MachinePark.OrderBy(m => m.Online ? 0 : 1).ToList())
+        {
+            <div class="col-lg-3 mb-2">
+                <fieldset class="@(machine.Online ? "success" : "danger")">
+                    <legend class="@(machine.Online ? "tsuccess" : "tdanger")">@(machine.Online ? "Online" : "Offline")</legend>
+                    <div class="card">
+                        <div class="card-header text-center">
+                            @machine.Name
+                        </div>
+                        <div class="card-body px-0">
+                            <p class="px-2">Machine Id: <span class="machineId">@machine.Id</span></p>
+                            <div class="bg-light px-2">
+                                <h4 class="text-center">Temperature data</h4>
+                                <div class="row">
+                                    <div class="col-10">
+                                        <p class="col mb-1">Temperature: @(machine.Data)&#176;C</p>
+                                        <p class="col mb-1">Last updated: @(machine.UpdatingTime.ToString("g"))</p>
+                                    </div>
+                                    <div class="col text-end align-self-center" data-bs-toggle="tooltip" data-bs-placement="top" title=@(machine.Online ? "Update" : "The machine needs to be online to update")>
+                                        <button disabled ="@(machine.Online ? false : true)" id="update" @onclick="() => FetchTemperature(machine)"><i class="fa-solid fa-arrows-rotate"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col">
+
+                                    <button id="trash" @onclick="() => Delete(machine)" class="me-1 text-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class="fa-solid fa-trash fa-xl"></i></button>
+                                    <button id="info" @onclick="() => Details(machine)" class="me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="View details"><i class="fa-solid fa-circle-info fa-xl"></i></button>
+                                </div>
+                                <div class="col text-end align-self-center">
+                                    <button id="power" @onclick="() => OnlineOnOff(machine)" class="@(machine.Online ? "text-danger" : "text-success")" data-bs-toggle="tooltip" data-bs-placement="top" title="@(machine.Online ? "Take Offline" : "Take Online")"><i class="fa-solid fa-power-off fa-xl"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        }
+    </div>
+
+@code {
+
+    [Parameter]
+    public List<Machine> MachinePark { get; set; } = null!;
+
+    [CascadingParameter]
+    public Exercise17.App.Shared.MainLayout Data { get; set; }
+
+    Faker faker = new Faker();
+
+    public async Task FetchTemperature(Machine machine)
+    {
+        var newTemp = faker.Random.Number(0, 35);
+        machine.Data = newTemp;
+        machine.UpdatingTime = DateTime.Now;
+        var response = await httpClient.PutAsJsonAsync<Machine>($"api/machines/data/{machine.Id}", machine);
+        Data.NotifyStateChange();
+    }
+
+
+    public async Task OnlineOnOff(Machine machine)
+    {
+        machine.Online = machine.Online ? false : true;
+        var response = await httpClient.PutAsJsonAsync<Machine>($"api/machines/status/{machine.Id}", machine);
+        Data.NotifyStateChange();
+    }
+
+    public async Task Delete(Machine machine)
+    {
+        var response = await httpClient.DeleteAsync($"api/machines/{machine.Id}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            MachinePark.Remove(machine);
+
+        }
+        Data.NotifyStateChange();
+    }
+
+    public async void Details(Machine machine)
+    {
+        state.SetMachine(machine);
+        nav.NavigateTo("details");
+    }
+
+    }
+

@@ -1,0 +1,58 @@
+﻿@inherits LayoutComponentBase
+@inject AppState state
+<CascadingValue Value="this">
+    <NavMenu />
+</CascadingValue>
+<div class="page">
+    <div class="sidebar">
+        <Statistics MachineCount="@MachineCount" Online="@Online" LastUpdated="@LastUpdated"></Statistics>
+    </div>
+
+    <main>
+        <article class="content px-4">
+            <CascadingValue Value="this">
+                @Body
+            </CascadingValue>
+        </article>
+    </main>
+</div>
+
+@code {
+
+
+    public List<Machine> machinePark { get; set; } = new List<Machine>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        machinePark = await httpClient.GetFromJsonAsync<List<Machine>>("api/machines");
+        state.OnChange += StateHasChanged;
+    }
+
+    public void NotifyStateChange()
+    {
+        StateHasChanged();
+    }
+
+    private int machineCount;
+    public int MachineCount
+    {
+        get { return machinePark.Count(); }
+        set { machineCount = value; }
+    }
+
+    private int online;
+    public int Online
+    {
+        get { return machinePark.Where(m => m.Online == true).Count(); }
+        set { online = value; }
+    }
+
+    private Machine lastUpdated;
+    public Machine LastUpdated
+    {
+        get { return machinePark.OrderByDescending(m => m.UpdatingTime).FirstOrDefault(); }
+        set { lastUpdated = value; }
+    }
+    public bool ShowAdd { get; set; }
+}
+

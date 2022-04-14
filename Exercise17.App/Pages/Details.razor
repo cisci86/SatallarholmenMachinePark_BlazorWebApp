@@ -1,0 +1,64 @@
+﻿@page "/details"
+@inject AppState state
+@inject IJSRuntime Js
+<div class="text-center">
+    <h3 class="bg d-md-inline-block rounded px-2">Details about <span class="text-decoration-underline fw-bolder">@MachineIn.Name</span></h3>
+</div>
+<div class="row">
+    <p class="fs-5 start col-1 offset-4 bg px-1">Machine id:</p>
+    <p class="fs-5 col-3 end bg">@MachineIn.Id</p>
+</div>
+
+<div class="row">
+    <p class="fs-5 start col-2 offset-4 bg px-1">Machine status:</p>
+    <p class="fs-5 col-2 end bg @(MachineIn.Online ? "text-success" : "text-danger")">@(MachineIn.Online ? "Online" : "Offline")</p>
+</div>
+
+<div class="text-center mt-2">
+    <h5 class="d-md-inline-block rounded p-2">Measured temperatures</h5>
+</div>
+<canvas id="tempValues" style="width:100%;max-width:1000px; background-color:#d1e9f3;" class="p-3 rounded"></canvas>
+
+@code {
+
+    public Machine MachineIn { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        MachineIn = state.Machine;
+        await GetData();
+        SetData();
+    }
+
+    public List<MachineDetails> Data { get; set; } = new List<MachineDetails>();
+    public static int dataCount;
+    private async Task GetData()
+    {
+        Data = await httpClient.GetFromJsonAsync<List<MachineDetails>>($"api/machines/{MachineIn.Id}");
+        dataCount = Data.Count();
+        temps = new int[dataCount];
+        dates = new string[dataCount];
+    }
+
+    public int[] temps;
+    public string[] dates;
+
+    private void SetData()
+    {
+        int i = 0;
+        foreach (var item in Data)
+        {
+            temps[i] = item.Data;
+            dates[i] = item.TimeAdded.ToString("g");
+            i++;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await Js.InvokeVoidAsync("graph", dates, temps);
+        await base.OnAfterRenderAsync(firstRender);
+
+    }
+
+}

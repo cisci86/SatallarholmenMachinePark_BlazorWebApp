@@ -1,0 +1,42 @@
+﻿@page "/"
+@inject IJSRuntime Js
+<PageTitle>Index</PageTitle>
+@if (Data.ShowAdd)
+{
+    <AddMachine Add="AddMachine"></AddMachine>
+}
+<Machines MachinePark=@Data.machinePark></Machines>
+
+@code {
+    // private List<Machine> machines = new List<Machine>();
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    machines = await httpClient.GetFromJsonAsync<List<Machine>>("api/machines");
+    //}
+    [CascadingParameter]
+    public Exercise17.App.Shared.MainLayout Data{ get; set; }
+
+    public async Task AddMachine(string name)
+    {
+        if (string.IsNullOrEmpty(name)) return;
+
+        var response = await httpClient.PostAsJsonAsync<CreateMachineDto>("/api/machines", new CreateMachineDto { Name = name });
+
+        if (response.IsSuccessStatusCode)
+        {
+            var machine = await response.Content.ReadFromJsonAsync<Machine>();
+            if (machine != null)
+            {
+                Data.machinePark.Add(machine);
+                Data.NotifyStateChange();
+            }
+        }
+    }
+     protected override async Task OnAfterRenderAsync(bool firstRender)
+    {        
+            await Js.InvokeVoidAsync("test");
+            await base.OnAfterRenderAsync(firstRender);
+     
+    }
+}

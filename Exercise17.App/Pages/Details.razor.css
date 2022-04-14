@@ -1,0 +1,17 @@
+﻿h5 {
+    background-color: #d1e9f3;
+}
+#tempValues {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.bg {
+    background-color: #d1e9f3;
+}
+.start{
+    border-radius: 10px 0px 0px 10px;
+}
+.end{
+    border-radius: 0px 10px 10px 0px;
+}

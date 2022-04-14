@@ -1,0 +1,48 @@
+﻿
+.machineId{
+    font-size: 15px;
+}
+fieldset {
+    all: revert;
+    background-color: #d1e9f3;
+}
+legend {
+    all: revert;
+    background-color: #d1e9f3;
+    border-radius: 5px;
+}
+.success {
+    border: 5px solid green;
+    border-radius: 10px;
+}
+.danger {
+    border: 5px solid red;
+    border-radius: 10px;
+}
+.tsuccess {
+    color: green;
+    font-weight: bold;
+}
+.tdanger{
+    color: red;
+    font-weight: bold;
+}
+button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border-color: black;
+    background-color: #d1e9f3;
+}
+#update{
+    width: 30px;
+    height: 30px;
+}
+i{
+    margin: auto;
+}
+
+h2 {
+    background-color: #d1e9f3;
+}
+

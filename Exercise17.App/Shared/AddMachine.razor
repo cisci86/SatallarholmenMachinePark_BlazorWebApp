@@ -1,0 +1,43 @@
+﻿<div class="col-6 offset-3 ">
+    <div class="text-center">
+<h2 class=" d-md-inline-block rounded px-2">Add new Machine to the park</h2>
+</div>
+<div class="text-end">
+    <button @onclick="Close" class="btn"><i class="fa-solid fa-x"></i></button>
+</div>
+<form class="mb-3">
+    <lable for="machineName" class="form-label fs-5 px-1 rounded">Machine name:</lable>
+    <input type="text" @bind="name" id="machineName" class="form-control"/>
+
+<div class="text-end">
+<button @onclick="OnAdd" @onclick:preventDefault="true" class="btn border border-1 border-dark mt-1">Add</button>
+</div>
+</form>
+</div>
+
+
+@code {
+    private string name = "";
+
+    [Parameter]
+    public EventCallback<string> Add { get; set; }
+
+    [CascadingParameter]
+    public Exercise17.App.Shared.MainLayout Data{ get; set; }
+
+    public async Task OnAdd()
+    {
+        await Add.InvokeAsync(name);
+        name = "";
+        Data.ShowAdd = false;
+        Data.NotifyStateChange();
+    }
+
+    public void Close()
+    {
+        Data.ShowAdd = false;
+        Data.NotifyStateChange();
+    }
+
+
+}

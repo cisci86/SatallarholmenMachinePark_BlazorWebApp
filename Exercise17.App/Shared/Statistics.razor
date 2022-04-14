@@ -1,0 +1,40 @@
+﻿
+
+<div class="text-light mt-3">
+    <h4 class="text-center">Park info</h4>
+    <div class="row">
+        <div class="col-9 ms-2">
+            <h5>Number of machines:</h5>
+        </div>
+        <div class="col fs-5 me-1 align-self-center">
+            <p class="btn-light btn px-1 py-0">@MachineCount</p>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-9 ms-2">
+            <h5>Online machines:</h5>
+        </div>
+        <div class="col fs-5 me-1">
+            <p class="btn-light btn px-1 py-0">@Online</p>
+        </div>
+    </div>
+    <hr />
+    <div class="ms-2 me-2">
+        <h5>Last updated machine:</h5>
+        <p>Id:<span class="btn btn-light px-1"> @(LastUpdated?.Id ?? "There are no updated machines")</span></p>
+        <p>Temperature: <span class="btn btn-light px-1 py-0">@(LastUpdated?.Data ?? 0)&#176;C</span></p>
+    </div>
+</div>
+@code {
+
+    [Parameter]
+    public int MachineCount { get; set; }
+
+    [Parameter]
+    public int Online { get; set; }
+
+    [Parameter]
+    public Machine LastUpdated { get; set; }
+
+}
