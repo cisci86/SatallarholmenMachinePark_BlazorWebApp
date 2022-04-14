@@ -1,8 +1,5 @@
 {
   "dependencies": {
-    "secrets1": {
-      "type": "secrets.user"
-    },
     "storage1": {
       "secretStore": "LocalSecretsFile",
       "type": "storage.emulator",
