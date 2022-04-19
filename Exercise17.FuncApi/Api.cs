@@ -58,18 +58,9 @@ namespace Exercise17.FuncApi
             ILogger log)
         {
             log.LogInformation("Creating new machine");
-            string requestBody = "";
-            try
-            {
-                requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-
-            }
-            catch (Exception ex)
-            {
-            log.LogInformation("i catchen");
-                log.LogInformation(ex.Message);
-                
-            }
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            
+            
             var createMachine = JsonConvert.DeserializeObject<CreateMachineDto>(requestBody);
             log.LogInformation("deserlize");
             if (createMachine == null) return new BadRequestResult();
@@ -80,22 +71,8 @@ namespace Exercise17.FuncApi
                 Online = false
             };
 
-            await machines.CreateIfNotExistsAsync();
-
-            try
-            {
-
-             await machines.ExecuteAsync(TableOperation.Insert(machine.ToMachineEntity()));
-            }
-            catch (Exception ex)
-            {
-                var exception = ex as StorageException;
-                log.LogInformation(exception?.RequestInformation.HttpStatusCode.ToString() ?? "No message");
-                log.LogInformation(exception?.RequestInformation.ExtendedErrorInformation.ErrorCode);
-                log.LogInformation(exception?.RequestInformation.ExtendedErrorInformation.ErrorMessage);
-            }
-
-            
+            //await machines.CreateIfNotExistsAsync();
+            await machines.ExecuteAsync(TableOperation.Insert(machine.ToMachineEntity()));            
 
             return new OkObjectResult(machine);
         }
@@ -121,16 +98,20 @@ namespace Exercise17.FuncApi
                 Online = machineToUpdate.Online,
                 Data = machineToUpdate.Data,
                 RowKey = DateTime.Now.ToString("G"),
-                PartitionKey = machineToUpdate.Id
+                PartitionKey = machineToUpdate.Id,
+                UpdatingTime = DateTime.Now
             };
+
 
             var machineUpdate = machineToUpdate.ToMachineEntity();
             machineUpdate.ETag = "*";
 
             var operation = TableOperation.Replace(machineUpdate);
             await machinePark.ExecuteAsync(operation);
-
-            await individual.ExecuteAsync(TableOperation.Insert(machineEntity));
+            log.LogInformation("lagt in uppdatering");
+            var operation2 = TableOperation.Insert(machineEntity);
+            await individual.ExecuteAsync(operation2);
+            //await individual.ExecuteAsync(TableOperation.Insert())
 
             return new OkObjectResult(machineEntity);
         }
