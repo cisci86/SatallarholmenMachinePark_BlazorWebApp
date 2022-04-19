@@ -58,9 +58,17 @@ namespace Exercise17.FuncApi
             ILogger log)
         {
             log.LogInformation("Creating new machine");
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            log.LogInformation("requestbody");
+            }
+            catch (Exception ex)
+            {
+            log.LogInformation("i catchen");
+                log.LogInformation(ex.Message);
+                
+            }
             var createMachine = JsonConvert.DeserializeObject<CreateMachineDto>(requestBody);
             log.LogInformation("deserlize");
             if (createMachine == null) return new BadRequestResult();
