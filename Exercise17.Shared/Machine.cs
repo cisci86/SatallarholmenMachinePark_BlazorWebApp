@@ -12,7 +12,7 @@ namespace Exercise17.Shared
         public string Name { get; set; }
         public bool Online { get; set; }
         public int Data { get; set; }
-        public DateTime UpdatingTime { get; set; }
+        public DateTime UpdatingTime { get; set; } = DateTime.Now;
 
         public Machine()
         {

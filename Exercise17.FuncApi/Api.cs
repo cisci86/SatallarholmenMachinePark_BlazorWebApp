@@ -64,7 +64,7 @@ namespace Exercise17.FuncApi
             var createMachine = JsonConvert.DeserializeObject<CreateMachineDto>(requestBody);
 
             if (createMachine == null) return new BadRequestResult();
-
+            log.LogInformation("no bad request");
             var machine = new Machine
             {
                 Name = createMachine.Name,
