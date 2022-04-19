@@ -60,9 +60,9 @@ namespace Exercise17.FuncApi
             log.LogInformation("Creating new machine");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-
+            log.LogInformation("requestbody");
             var createMachine = JsonConvert.DeserializeObject<CreateMachineDto>(requestBody);
-
+            log.LogInformation("deserlize");
             if (createMachine == null) return new BadRequestResult();
             log.LogInformation("no bad request");
             var machine = new Machine
