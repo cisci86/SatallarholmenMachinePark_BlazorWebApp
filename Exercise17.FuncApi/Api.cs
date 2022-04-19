@@ -137,7 +137,7 @@ namespace Exercise17.FuncApi
         public static async Task<IActionResult> Delete(
             [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "machines/{id}")] HttpRequest req,
             [Table("machinepark", "Machines", "{id}", Connection = "AzureWebJobsStorage")] MachineEntity machineTableToRemove,
-            [Table("machinepark", Connection = "UseDevelopmentStorage")] CloudTable machineTable,
+            [Table("machinepark", Connection = "AzureWebJobsStorage")] CloudTable machineTable,
             [Queue("machinequeue", Connection = "AzureWebJobsStorage")] IAsyncCollector<MachineEntity> queueMachine,
             string id,
             ILogger log)
