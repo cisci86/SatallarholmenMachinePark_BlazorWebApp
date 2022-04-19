@@ -58,9 +58,10 @@ namespace Exercise17.FuncApi
             ILogger log)
         {
             log.LogInformation("Creating new machine");
+            string requestBody = "";
             try
             {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
             }
             catch (Exception ex)
