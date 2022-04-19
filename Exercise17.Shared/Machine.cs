@@ -16,7 +16,7 @@ namespace Exercise17.Shared
 
         public Machine()
         {
-            Id = Guid.NewGuid().ToString();
+            Id = Guid.NewGuid().ToString("n");
             Data = 0;
         }
         

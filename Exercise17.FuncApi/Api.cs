@@ -71,7 +71,22 @@ namespace Exercise17.FuncApi
                 Online = false
             };
 
-            await machines.ExecuteAsync(TableOperation.Insert(machine.ToMachineEntity()));
+            await machines.CreateIfNotExistsAsync();
+
+            try
+            {
+
+             await machines.ExecuteAsync(TableOperation.Insert(machine.ToMachineEntity()));
+            }
+            catch (Exception ex)
+            {
+                var exception = ex as StorageException;
+                log.LogInformation(exception?.RequestInformation.HttpStatusCode.ToString());
+                log.LogInformation(exception?.RequestInformation.ExtendedErrorInformation.ErrorCode);
+                log.LogInformation(exception?.RequestInformation.ExtendedErrorInformation.ErrorMessage);
+            }
+
+            
 
             return new OkObjectResult(machine);
         }
