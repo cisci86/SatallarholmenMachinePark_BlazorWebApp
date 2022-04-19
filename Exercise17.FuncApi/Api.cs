@@ -54,7 +54,7 @@ namespace Exercise17.FuncApi
         [FunctionName("Create")]
         public static async Task<IActionResult> Create(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "machines")] HttpRequest req,
-            [Table("machinepark", Connection = "AzureWebJobsStorage")] IAsyncCollector<MachineEntity> machines,
+            [Table("machinepark", Connection = "AzureWebJobsStorage")] CloudTable machines,
             ILogger log)
         {
             log.LogInformation("Creating new machine");
@@ -71,7 +71,7 @@ namespace Exercise17.FuncApi
                 Online = false
             };
 
-            await machines.AddAsync(machine.ToMachineEntity());
+            await machines.ExecuteAsync(TableOperation.Insert(machine.ToMachineEntity()));
 
             return new OkObjectResult(machine);
         }
