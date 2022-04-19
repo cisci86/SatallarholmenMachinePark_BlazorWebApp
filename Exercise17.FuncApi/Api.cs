@@ -81,7 +81,7 @@ namespace Exercise17.FuncApi
             catch (Exception ex)
             {
                 var exception = ex as StorageException;
-                log.LogInformation(exception?.RequestInformation.HttpStatusCode.ToString());
+                log.LogInformation(exception?.RequestInformation.HttpStatusCode.ToString() ?? "No message");
                 log.LogInformation(exception?.RequestInformation.ExtendedErrorInformation.ErrorCode);
                 log.LogInformation(exception?.RequestInformation.ExtendedErrorInformation.ErrorMessage);
             }
