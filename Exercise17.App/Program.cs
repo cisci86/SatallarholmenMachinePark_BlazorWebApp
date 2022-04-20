@@ -8,7 +8,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://exercise17funcapi20220419111614.azurewebsites.net") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://machineparkapi.azurewebsites.net") });
 builder.Services.AddSingleton<AppState>();
 
 await builder.Build().RunAsync();
