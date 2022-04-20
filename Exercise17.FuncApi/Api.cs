@@ -97,21 +97,20 @@ namespace Exercise17.FuncApi
                 Name = machineToUpdate.Name,
                 Online = machineToUpdate.Online,
                 Data = machineToUpdate.Data,
-                RowKey = DateTime.Now.ToString("G"),
-                PartitionKey = machineToUpdate.Id,
-                UpdatingTime = DateTime.Now
+                RowKey = Guid.NewGuid().ToString("n"),
+                PartitionKey = machineToUpdate.Id
             };
-
 
             var machineUpdate = machineToUpdate.ToMachineEntity();
             machineUpdate.ETag = "*";
 
             var operation = TableOperation.Replace(machineUpdate);
             await machinePark.ExecuteAsync(operation);
-            log.LogInformation("lagt in uppdatering");
-            var operation2 = TableOperation.Insert(machineEntity);
-            await individual.ExecuteAsync(operation2);
-            //await individual.ExecuteAsync(TableOperation.Insert())
+
+
+            //var operation2 = TableOperation.Insert(machineEntity);
+            //var result = await individual.ExecuteAsync(operation2);
+            await individual.ExecuteAsync(TableOperation.Insert(machineEntity));
 
             return new OkObjectResult(machineEntity);
         }
