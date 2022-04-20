@@ -9,6 +9,11 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://machineparkapi.azurewebsites.net") });
+builder.Services.AddMsalAuthentication(options =>
+{
+    builder.Configuration.Bind("AzureAdB2C", options.ProviderOptions.Authentication);
+});
+
 builder.Services.AddSingleton<AppState>();
 
 await builder.Build().RunAsync();
