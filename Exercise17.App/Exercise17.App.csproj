@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>a500e53d-e185-4024-906a-533404e484d2</UserSecretsId>
+    <UserSecretsId>aspnet-Exercise17.App-a500e53d-e185-4024-906a-533404e484d2</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
